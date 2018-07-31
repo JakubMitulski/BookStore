@@ -109,6 +109,16 @@
                 <version>${spring-boot.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>6.0.11.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator-annotation-processor</artifactId>
+                <version>6.0.2.Final</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
