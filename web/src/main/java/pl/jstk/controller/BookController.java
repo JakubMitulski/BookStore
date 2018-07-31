@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pl.jstk.constants.ViewNames;
 import pl.jstk.service.BookService;
 import pl.jstk.to.BookTo;
+
 import javax.validation.Valid;
 
 @Controller
@@ -32,7 +33,14 @@ public class BookController {
 
     @GetMapping(value = "/books/find")
     public String findBooks(Model model) {
+        model.addAttribute("findBook", new BookTo());
         return ViewNames.FIND;
+    }
+
+    @PostMapping(value = "/search")
+    public String findBooksByParams(@ModelAttribute("findBook")BookTo findBook, Model model) {
+        model.addAttribute("bookList", bookService.findBooksByParams(findBook));
+        return ViewNames.BOOKS;
     }
 
     @GetMapping(value = "/books/add")

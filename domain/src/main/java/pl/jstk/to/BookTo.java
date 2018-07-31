@@ -7,10 +7,10 @@ import javax.validation.constraints.Size;
 public class BookTo {
     private Long id;
     @NotNull
-    @Size(min = 4)
+    @Size(min = 2)
     private String title;
     @NotNull
-    @Size(min = 4)
+    @Size(min = 2)
     private String authors;
     @NotNull
     private BookStatus status;

@@ -17,4 +17,6 @@ public interface BookService {
     void deleteBook(Long id);
 
     BookTo findBookById(Long bookId);
+
+    List<BookTo> findBooksByParams(BookTo findBook);
 }
