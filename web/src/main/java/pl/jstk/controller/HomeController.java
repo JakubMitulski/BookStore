@@ -20,4 +20,9 @@ public class HomeController {
         return ViewNames.WELCOME;
     }
 
+    @GetMapping(value = {"/login", "/logout"})
+    public String login(Model model) {
+        return ViewNames.LOGIN;
+    }
+
 }

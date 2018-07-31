@@ -1,0 +1,7 @@
+pl\jstk\constants\ViewNames.class
+pl\jstk\constants\ModelConstants.class
+pl\jstk\config\SecurityConfiguration.class
+pl\jstk\config\WebConfig.class
+pl\jstk\controller\BookController.class
+pl\jstk\controller\HomeController.class
+pl\jstk\BookApplication.class
