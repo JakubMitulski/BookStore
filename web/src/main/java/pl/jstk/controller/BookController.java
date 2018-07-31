@@ -31,6 +31,13 @@ public class BookController {
         return ViewNames.BOOK;
     }
 
+    @GetMapping(value = "/books/delete")
+    public String deleteBookById(@RequestParam("id") Long id, Model model) {
+        bookService.deleteBook(id);
+        model.addAttribute("bookList", bookService.findAllBooks());
+        return ViewNames.BOOKS;
+    }
+
     @GetMapping(value = "/books/find")
     public String findBooks(Model model) {
         model.addAttribute("findBook", new BookTo());
@@ -38,7 +45,7 @@ public class BookController {
     }
 
     @PostMapping(value = "/search")
-    public String findBooksByParams(@ModelAttribute("findBook")BookTo findBook, Model model) {
+    public String findBooksByParams(@ModelAttribute("findBook") BookTo findBook, Model model) {
         model.addAttribute("bookList", bookService.findBooksByParams(findBook));
         return ViewNames.BOOKS;
     }

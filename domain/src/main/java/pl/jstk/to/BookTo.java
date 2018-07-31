@@ -1,6 +1,7 @@
 package pl.jstk.to;
 
 import pl.jstk.enumerations.BookStatus;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -14,7 +15,7 @@ public class BookTo {
     private String authors;
     @NotNull
     private BookStatus status;
-    
+
     public BookTo() {
     }
 
@@ -49,11 +50,11 @@ public class BookTo {
         this.authors = authors;
     }
 
-	public BookStatus getStatus() {
-		return status;
-	}
+    public BookStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus(BookStatus status) {
-		this.status = status;
-	}
+    public void setStatus(BookStatus status) {
+        this.status = status;
+    }
 }
