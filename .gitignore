@@ -1,4 +1,10 @@
 */target/*
+ domain/target/
+ persistence/target/
+ web/target/
+ books.db.mv.db
+
+
 !.mvn/wrapper/maven-wrapper.jar
 ${env.BASE_DIR}/
 
