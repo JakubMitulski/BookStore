@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    private static final String INFO_TEXT = "Here You shall display information containing information about newly created TO";
-    protected static final String WELCOME = "This is a welcome page";
+    private static final String INFO_TEXT = "To log in as admin : admin/admin, to log in as user: user/user";
+    protected static final String WELCOME = "SuperBookstore.com";
 
     @GetMapping(value = {"/", "/home"})
     public String welcome(Model model) {

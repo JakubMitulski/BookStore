@@ -66,4 +66,10 @@ public class BookController {
         model.addAttribute("bookList", bookService.findAllBooks());
         return ViewNames.BOOKS;
     }
+
+    @GetMapping(value = "/403")
+    public String accesDenied(Model model){
+        model.addAttribute("error", "Deleting allowed only for admin role. Log in as admin first.");
+        return ViewNames.ACCESS;
+    }
 }

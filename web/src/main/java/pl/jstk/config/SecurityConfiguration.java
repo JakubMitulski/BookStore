@@ -32,7 +32,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/home")
                 .failureUrl("/login?error=true")
                 .and()
-                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll()
+                .and().exceptionHandling().accessDeniedPage("/403");
     }
 
     @Bean
