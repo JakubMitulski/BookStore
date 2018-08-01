@@ -16,6 +16,8 @@
         </div>
     </section>
 
+    <section th:if="${deleted}" class="alert alert-info"><p>Book has been deleted successfully</p></section>
+
     <section class="container">
         <div class="row">
             <th:block th:each="book : ${bookList}">
@@ -31,7 +33,7 @@
                                    class="btn btn-primary"> <span class="glyphicon-info-sign glyphicon"/></span> Details
                                 </a>
                                 <a th:href="@{'/books/delete?id='+${book.id}}"
-                                   class="btn btn-danger"> <span class="glyphicon-info-sign glyphicon"/></span> Delete
+                                   class="btn btn-danger"> <span class="glyphicon-remove glyphicon"/></span> Delete
                                 </a>
                             </p>
 

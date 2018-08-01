@@ -11,6 +11,7 @@
                 </a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
+
                 <ul class="nav navbar-nav">
                     <li>
                         <a th:href="@{/}">Home</a>
@@ -19,6 +20,7 @@
                         <a th:href="@{/books}">Books</a>
                     </li>
                 </ul>
+
                 <ul class="nav navbar-nav navbar-right">
                     <li sec:authorize="isAuthenticated()" style="display: inline-block;">
                         <a sec:authentication="name">Name</a>
@@ -29,6 +31,7 @@
                     <li sec:authorize="isAnonymous()" style="display: inline-block;"><a th:href="@{/login}"><span
                             class="glyphicon glyphicon-log-in"></span> Login</a></li>
                 </ul>
+
             </div>
             <div>
             </div>

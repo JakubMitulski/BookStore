@@ -39,6 +39,7 @@ public class BookController {
     public String deleteBookById(@RequestParam("id") Long id, Model model) {
         bookService.deleteBook(id);
         model.addAttribute("bookList", bookService.findAllBooks());
+        model.addAttribute("deleted", "deleted");
         return ViewNames.BOOKS;
     }
 
