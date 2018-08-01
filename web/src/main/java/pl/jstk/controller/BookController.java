@@ -1,6 +1,8 @@
 package pl.jstk.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import pl.jstk.to.BookTo;
 import javax.validation.Valid;
 
 @Controller
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class BookController {
 
     @Autowired
@@ -31,6 +34,7 @@ public class BookController {
         return ViewNames.BOOK;
     }
 
+    @Secured("ROLE_ADMIN")
     @GetMapping(value = "/books/delete")
     public String deleteBookById(@RequestParam("id") Long id, Model model) {
         bookService.deleteBook(id);
