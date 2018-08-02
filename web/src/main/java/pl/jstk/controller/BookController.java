@@ -61,7 +61,7 @@ public class BookController {
         return ViewNames.ADD;
     }
 
-    @PostMapping(value = "/greeting")
+    @PostMapping(value = "/books/add")
     public String saveBook(@ModelAttribute("newBook") @Valid BookTo newBook, Model model) {
         bookService.saveBook(newBook);
         model.addAttribute("bookList", bookService.findAllBooks());
