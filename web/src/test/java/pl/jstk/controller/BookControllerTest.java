@@ -25,6 +25,8 @@ import pl.jstk.to.BookTo;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -73,6 +75,7 @@ public class BookControllerTest {
         //Then
         resultActions.andExpect(status().isOk())
                 .andExpect(view().name(ViewNames.BOOKS));
+        verify(bookService, times(1)).findAllBooks();
     }
 
     @Test
@@ -84,6 +87,7 @@ public class BookControllerTest {
         //Then
         resultActions.andExpect(status().isOk())
                 .andExpect(view().name(ViewNames.BOOK));
+        verify(bookService, times(1)).findBookById(Mockito.anyLong());
     }
 
     @Test
@@ -96,6 +100,7 @@ public class BookControllerTest {
         //Then
         resultActions.andExpect(status().isOk())
                 .andExpect(view().name(ViewNames.BOOKS));
+        verify(bookService, times(1)).deleteBook(Mockito.anyLong());
     }
 
     @Test
@@ -116,6 +121,7 @@ public class BookControllerTest {
         //Then
         resultActions.andExpect(status().isOk())
                 .andExpect(view().name(ViewNames.BOOKS));
+        verify(bookService, times(1)).findBooksByParams(Mockito.any(BookTo.class));
     }
 
     @Test
@@ -142,6 +148,7 @@ public class BookControllerTest {
         //Then
         resultActions.andExpect(status().isOk())
                 .andExpect(view().name(ViewNames.BOOKS));
+        verify(bookService, times(1)).saveBook(Mockito.any(BookTo.class));
     }
 
     @Test
