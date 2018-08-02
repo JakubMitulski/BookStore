@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pl.jstk.constants.ViewNames;
 import pl.jstk.service.BookService;
@@ -27,10 +27,12 @@ import java.util.List;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -41,6 +43,9 @@ public class BookControllerTest {
     private MockMvc mockMvc;
 
     private List<BookTo> booklist;
+
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -56,8 +61,12 @@ public class BookControllerTest {
         MockitoAnnotations.initMocks(bookService);
         Mockito.reset(bookService);
 
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        this.mockMvc = webAppContextSetup(webApplicationContext).build();
         ReflectionTestUtils.setField(bookController, "bookService", bookService);
+
+        this.mockMvc = webAppContextSetup(webApplicationContext)
+                .addFilter(springSecurityFilterChain)
+                .build();
 
         booklist = new ArrayList<>();
         BookTo bookTo = new BookTo();
@@ -67,10 +76,11 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     public void shouldReturnBooksPage() throws Exception {
         //When
         Mockito.when(bookService.findAllBooks()).thenReturn(booklist);
-        ResultActions resultActions = mockMvc.perform(get("/books"));
+        ResultActions resultActions = mockMvc.perform(get("/books").with(testSecurityContext()));
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -79,10 +89,11 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     public void shouldReturnBookDetails() throws Exception {
         //When
         Mockito.when(bookService.findBookById(1L)).thenReturn(booklist.get(0));
-        ResultActions resultActions = mockMvc.perform(get("/books/book?id=1"));
+        ResultActions resultActions = mockMvc.perform(get("/books/book?id=1").with(testSecurityContext()));
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -95,7 +106,7 @@ public class BookControllerTest {
     public void shouldDeleteBook() throws Exception {
         //When
         Mockito.when(bookService.findBookById(1L)).thenReturn(booklist.get(0));
-        ResultActions resultActions = mockMvc.perform(get("/books/delete?id=1"));
+        ResultActions resultActions = mockMvc.perform(get("/books/delete?id=1").with(testSecurityContext()));
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -104,9 +115,10 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     public void shouldReturnFindBooksView() throws Exception {
         //When
-        ResultActions resultActions = mockMvc.perform(get("/books/find"));
+        ResultActions resultActions = mockMvc.perform(get("/books/find").with(testSecurityContext()));
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -114,9 +126,10 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     public void shouldReturnBooksByParams() throws Exception {
         //When
-        ResultActions resultActions = mockMvc.perform(post("/search"));
+        ResultActions resultActions = mockMvc.perform(post("/search").with(testSecurityContext()));
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -125,9 +138,10 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     public void shouldReturnAddBookView() throws Exception {
         //When
-        ResultActions resultActions = mockMvc.perform(get("/books/add"));
+        ResultActions resultActions = mockMvc.perform(get("/books/add").with(testSecurityContext()));
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -135,6 +149,7 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     public void shouldSaveAddedBook() throws Exception {
         //When
         Mockito.when(bookService.findAllBooks()).thenReturn(booklist);
@@ -143,7 +158,8 @@ public class BookControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("title", "test2")
                 .param("authors", "test2")
-                .param("status", "FREE"));
+                .param("status", "FREE")
+                .with(testSecurityContext()));
 
         //Then
         resultActions.andExpect(status().isOk())
@@ -152,9 +168,10 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     public void shouldReturnAccessView() throws Exception {
         //When
-        ResultActions resultActions = mockMvc.perform(get("/403"));
+        ResultActions resultActions = mockMvc.perform(get("/403").with(testSecurityContext()));
 
         //Then
         resultActions.andExpect(status().isOk())

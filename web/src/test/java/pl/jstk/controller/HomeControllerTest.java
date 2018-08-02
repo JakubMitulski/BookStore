@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import pl.jstk.constants.ModelConstants;
+import pl.jstk.constants.ViewNames;
 
 import static org.hamcrest.core.StringContains.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -55,7 +56,7 @@ public class HomeControllerTest {
         ResultActions resultActions = mockMvc.perform(get("/login"));
         //Then
         resultActions.andExpect(status().isOk())
-                .andExpect(view().name("login"));
+                .andExpect(view().name(ViewNames.LOGIN));
     }
 
 }
