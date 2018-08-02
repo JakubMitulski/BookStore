@@ -20,19 +20,23 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 import pl.jstk.constants.ViewNames;
+import pl.jstk.enumerations.BookStatus;
 import pl.jstk.service.BookService;
 import pl.jstk.to.BookTo;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -69,10 +73,13 @@ public class BookControllerTest {
                 .addFilter(springSecurityFilterChain)
                 .build();
 
-        booklist = new ArrayList<>();
         BookTo bookTo = new BookTo();
         bookTo.setId(1L);
-        bookTo.setTitle("Test");
+        bookTo.setTitle("title");
+        bookTo.setAuthors("author");
+        bookTo.setStatus(BookStatus.FREE);
+
+        booklist = new ArrayList<>();
         booklist.add(bookTo);
     }
 
@@ -85,7 +92,14 @@ public class BookControllerTest {
 
         //Then
         resultActions.andExpect(status().isOk())
-                .andExpect(view().name(ViewNames.BOOKS));
+                .andExpect(view().name(ViewNames.BOOKS))
+                .andExpect(model().attribute("bookList", hasItem(
+                        allOf(
+                                hasProperty("id", is(1L)),
+                                hasProperty("title", is("title")),
+                                hasProperty("authors", is("author")),
+                                hasProperty("status", is(BookStatus.FREE))))));
+
         verify(bookService, times(1)).findAllBooks();
     }
 
@@ -177,6 +191,7 @@ public class BookControllerTest {
         //Then
         resultActions.andExpect(status().isOk())
                 .andExpect(view().name(ViewNames.BOOKS));
+
         verify(bookService, times(1)).saveBook(Mockito.any(BookTo.class));
     }
 
