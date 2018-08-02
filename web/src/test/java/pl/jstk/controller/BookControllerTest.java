@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ContextConfiguration;
@@ -115,6 +116,18 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "USER")
+    public void shouldNotAllowDelete() throws Exception {
+        //When
+        Mockito.when(bookService.findBookById(1L)).thenReturn(booklist.get(0));
+        ResultActions resultActions = mockMvc.perform(get("/books/delete?id=1").with(testSecurityContext()));
+
+        //Then
+        resultActions.andExpect(status().isForbidden());
+        verify(bookService, times(0)).deleteBook(Mockito.anyLong());
+    }
+
+    @Test
     @WithMockUser(username = "user")
     public void shouldReturnFindBooksView() throws Exception {
         //When
@@ -177,4 +190,27 @@ public class BookControllerTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(view().name(ViewNames.ACCESS));
     }
+
+    @Test
+    @WithAnonymousUser
+    public void shouldNotAllowForAccess() throws Exception {
+        //When
+        ResultActions resultActions1 = mockMvc.perform(get("/books").with(testSecurityContext()));
+        ResultActions resultActions2 = mockMvc.perform(get("/books/book?id=1").with(testSecurityContext()));
+        ResultActions resultActions3 = mockMvc.perform(get("/books/delete?id=1").with(testSecurityContext()));
+        ResultActions resultActions4 = mockMvc.perform(get("/books/find").with(testSecurityContext()));
+        ResultActions resultActions5 = mockMvc.perform(get("/books/search").with(testSecurityContext()));
+        ResultActions resultActions6 = mockMvc.perform(get("/books/add").with(testSecurityContext()));
+        ResultActions resultActions7 = mockMvc.perform(get("/books//403").with(testSecurityContext()));
+
+        //Then
+        resultActions1.andExpect(status().is3xxRedirection());
+        resultActions2.andExpect(status().is3xxRedirection());
+        resultActions3.andExpect(status().is3xxRedirection());
+        resultActions4.andExpect(status().is3xxRedirection());
+        resultActions5.andExpect(status().is3xxRedirection());
+        resultActions6.andExpect(status().is3xxRedirection());
+        resultActions7.andExpect(status().is3xxRedirection());
+    }
+
 }
